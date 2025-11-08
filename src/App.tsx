@@ -1,5 +1,5 @@
 import "./App.css";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
@@ -79,17 +79,27 @@ const tiers = [
   { name: "Diamond", tagline: "Elite AI experience" },
 ];
 
-const backgroundVariants = {
+const easeOutCurve: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
+const backgroundVariants: Variants = {
   initial: { opacity: 0, scale: 0.98 },
-  animate: { opacity: 1, scale: 1, transition: { duration: 1.6, ease: "easeOut" } },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 1.6, ease: easeOutCurve },
+  },
 };
 
-const fadeInUp = {
+const fadeInUp: Variants = {
   initial: { opacity: 0, y: 40 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: easeOutCurve },
+  },
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   animate: {
     transition: {
       staggerChildren: 0.15,
