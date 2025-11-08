@@ -7,12 +7,12 @@
 :root {
   font-family: "Inter", system-ui, sans-serif;
   color: #f5f6f8;
-  background-color: #050510;
+  background-color: #020617;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
 body {
-  background-color: #050510;
+  background-color: #020617;
 }
