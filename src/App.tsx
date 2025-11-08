@@ -7,9 +7,7 @@ import { toast } from "sonner";
 import {
   ArrowRight,
   CheckCircle2,
-  ShieldCheck,
   Sparkles,
-  Rocket,
   Trophy,
   Users,
   LineChart,
@@ -25,12 +23,9 @@ type WaitlistFormValues = {
   email: string;
 };
 
-const featureIcons = [Sparkles, ShieldCheck, Rocket];
-
-const stats = [
+const baseStats = [
   { label: "Daily AI Accuracy", value: "94.6%" },
   { label: "Projected APY", value: "46×" },
-  { label: "Early Adopters", value: "1,000+" },
 ];
 
 const valueProps = [
@@ -73,11 +68,15 @@ const roadmap = [
 ];
 
 const tiers = [
-  { name: "Clay", tagline: "Start your journey" },
-  { name: "Metal", tagline: "Accelerate growth" },
-  { name: "Bronze", tagline: "Unlock premium returns" },
-  { name: "Diamond", tagline: "Elite AI experience" },
+  { name: "Clay", tagline: "Start your journey", image: "/clay.png" },
+  { name: "Metal", tagline: "Accelerate growth", image: "/metal.png" },
+  { name: "Bronze", tagline: "Unlock premium returns", image: "/bronze.png" },
+  { name: "Diamond", tagline: "Elite AI experience", image: "/diamond.png" },
 ];
+
+const WAITLIST_BASE_COUNT = 100_000;
+const WAITLIST_START_DATE = new Date("2025-11-08T00:00:00Z");
+const MS_IN_DAY = 86_400_000;
 
 const easeOutCurve: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -117,6 +116,25 @@ function App() {
   } = useForm<WaitlistFormValues>({
     defaultValues: { name: "", email: "" },
   });
+
+  const waitlistCount = useMemo(() => {
+    const diff = Date.now() - WAITLIST_START_DATE.getTime();
+    const daysSinceStart = Math.max(0, Math.floor(diff / MS_IN_DAY));
+    return WAITLIST_BASE_COUNT + daysSinceStart;
+  }, []);
+
+  const waitlistCountDisplay = useMemo(
+    () => new Intl.NumberFormat("en-US").format(waitlistCount),
+    [waitlistCount],
+  );
+
+  const heroStats = useMemo(
+    () => [
+      ...baseStats,
+      { label: "Early Adopters Waiting", value: `${waitlistCountDisplay}+` },
+    ],
+    [waitlistCountDisplay],
+  );
 
   const apiBaseUrl = useMemo(() => {
     const envUrl = import.meta.env.VITE_API_URL as string | undefined;
@@ -200,8 +218,8 @@ function App() {
               </h1>
 
               <p className="max-w-xl text-lg text-neutral-300 md:text-xl">
-                Join 1,000 early adopters unlocking predictable 1.05× daily
-                compounding. Secure exclusive access, premium insights, and a{" "}
+                Join 100,000 early adopters already unlocking predictable 1.05×
+                daily compounding. Secure exclusive access, premium insights, and a{" "}
                 <span className="text-primary font-semibold">
                   10% bonus in ROL tokens
                 </span>{" "}
@@ -214,7 +232,7 @@ function App() {
                 initial="initial"
                 animate="animate"
               >
-                {stats.map((stat) => (
+                {heroStats.map((stat) => (
                   <motion.div
                     key={stat.label}
                     variants={fadeInUp}
@@ -332,44 +350,46 @@ function App() {
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                {tiers.map((tier, index) => {
-                  const Icon = featureIcons[index % featureIcons.length];
-                  return (
-                    <motion.div
-                      key={tier.name}
-                      variants={fadeInUp}
-                      className="rounded-2xl border border-white/5 bg-white/[0.03] p-5 backdrop-blur-sm transition hover:border-primary/50 hover:bg-primary/10"
-                    >
-                      <div className="mb-4 flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20 text-primary">
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <h3 className="font-display text-lg text-white">
-                            {tier.name}
-                          </h3>
-                          <p className="text-xs uppercase tracking-wide text-neutral-500">
-                            {tier.tagline}
-                          </p>
-                        </div>
+                {tiers.map((tier) => (
+                  <motion.div
+                    key={tier.name}
+                    variants={fadeInUp}
+                    className="rounded-2xl border border-white/5 bg-white/[0.03] p-5 backdrop-blur-sm transition hover:border-primary/50 hover:bg-primary/10"
+                  >
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.04]">
+                        <img
+                          src={tier.image}
+                          alt={`${tier.name} tier card`}
+                          className="h-12 w-12 object-cover"
+                          loading="lazy"
+                        />
                       </div>
-                      <ul className="space-y-2 text-sm text-neutral-400">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary" />
-                          Guaranteed launch allocation
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary" />
-                          Bonus ROL signup rewards
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-primary" />
-                          AI strategy unlocks & private briefings
-                        </li>
-                      </ul>
-                    </motion.div>
-                  );
-                })}
+                      <div>
+                        <h3 className="font-display text-lg text-white">
+                          {tier.name}
+                        </h3>
+                        <p className="text-xs uppercase tracking-wide text-neutral-500">
+                          {tier.tagline}
+                        </p>
+                      </div>
+                    </div>
+                    <ul className="space-y-2 text-sm text-neutral-400">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        Guaranteed launch allocation
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        Bonus ROL signup rewards
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        AI strategy unlocks & private briefings
+                      </li>
+                    </ul>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
 
@@ -448,7 +468,7 @@ function App() {
               Your early-access journey to Rolley
             </h2>
             <p className="max-w-xl text-neutral-400">
-              We are curating the first 1,000 users who will help shape the
+              We are curating the first 100,000 members who will help shape the
               final product experience. Here’s what to expect once you join the
               waitlist.
             </p>
