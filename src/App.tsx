@@ -131,7 +131,7 @@ function App() {
   const heroStats = useMemo(
     () => [
       ...baseStats,
-      { label: "Early Adopters Waiting", value: `${waitlistCountDisplay}+` },
+      { label: "Early Adopters Waiting", value: waitlistCountDisplay },
     ],
     [waitlistCountDisplay],
   );
@@ -533,7 +533,7 @@ function App() {
 
         <footer className="mt-16 border-t border-white/5 pt-6 text-sm text-neutral-500 md:mt-24">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
+      <div>
               <p className="text-neutral-400">© 2025 Rolley. All rights reserved.</p>
               <p className="mt-1 flex items-center gap-2 text-neutral-400">
                 <Phone className="h-4 w-4 text-primary" />
@@ -568,8 +568,8 @@ function App() {
                 >
                   <Send className="h-4 w-4" />
                   Telegram
-                </a>
-              </div>
+        </a>
+      </div>
             </div>
           </div>
         </footer>
