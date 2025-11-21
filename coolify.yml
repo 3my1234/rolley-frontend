@@ -1,0 +1,27 @@
+name: rolley-vite
+description: Rolley Frontend (React + Vite)
+
+# Build configuration
+build:
+  dockerfile: Dockerfile
+  context: .
+
+# Port configuration (Coolify will handle port mapping)
+ports:
+  - "5173:5173"
+
+# Health check
+healthcheck:
+  path: /health
+  interval: 30
+  timeout: 3
+  retries: 3
+
+# Environment variables (set these in Coolify UI)
+# Required:
+# - VITE_API_URL (Backend API URL - e.g., http://rolley-backend:3003 or public URL)
+# - VITE_FOOTBALL_AI_URL (Football AI service URL - optional)
+
+# Optional:
+# - VITE_PRIVY_APP_ID (Privy app ID for authentication)
+
